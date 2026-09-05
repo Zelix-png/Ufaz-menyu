@@ -147,6 +147,16 @@
   }
   .menu-btn:active{transform:scale(0.98);}
 
+  .comment-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--card); border:1px solid var(--card-border);
+    color:var(--text); font-weight:600; border-radius:14px;
+    padding:12px 16px; cursor:pointer; font-size:13px; width:100%;
+    transition:.2s; min-height:44px;
+  }
+  .comment-btn:hover{border-color:var(--accent);}
+  .comment-btn:active{transform:scale(0.98);}
+
   .qr-row{display:flex; gap:12px; margin-top:8px;}
   .qr-box{
     flex:1; background:var(--card); border:1px solid var(--card-border);
@@ -174,6 +184,65 @@
   .dots{display:flex; gap:6px; justify-content:center; flex:1;}
   .dot{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2);}
   .dot.on{background:var(--accent); width:18px; border-radius:5px;}
+
+  /* COMMENTS MODAL */
+  .modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.7); z-index:1000; align-items:flex-end;}
+  .modal.active{display:flex;}
+  .modal-content{
+    background:linear-gradient(135deg,var(--bg-1),var(--bg-2));
+    width:100%; max-height:90vh; border-radius:30px 30px 0 0;
+    padding:20px; overflow-y:auto; animation:slideUp .3s ease;
+  }
+  @keyframes slideUp{from{transform:translateY(100%);} to{transform:translateY(0);}}
+  .modal-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
+  .modal-header h2{font-size:18px; font-weight:700;}
+  .close-modal{
+    background:var(--card); border:1px solid var(--card-border);
+    width:36px; height:36px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    transition:.2s;
+  }
+  .close-modal:active{transform:scale(0.9);}
+
+  .add-comment-form{
+    background:var(--card); border:1px solid var(--card-border);
+    border-radius:16px; padding:14px; margin-bottom:18px;
+  }
+  .form-group{margin-bottom:12px;}
+  .form-group label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600;}
+  .form-group input, .form-group textarea{
+    width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--card-border);
+    border-radius:10px; padding:10px 12px; color:var(--text); font-family:'Poppins',sans-serif;
+    font-size:13px;
+  }
+  .form-group textarea{resize:vertical; min-height:70px;}
+  .form-group input::placeholder, .form-group textarea::placeholder{color:var(--muted);}
+
+  .star-rating{display:flex; gap:8px; font-size:24px; margin:10px 0;}
+  .star-rating .star{cursor:pointer; opacity:0.4; transition:.2s;}
+  .star-rating .star.active{opacity:1;}
+
+  .submit-btn{
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#0f0c29; border:none; border-radius:10px; padding:12px;
+    width:100%; font-weight:700; cursor:pointer; font-size:13px;
+    transition:.2s;
+  }
+  .submit-btn:active{transform:scale(0.98);}
+  .submit-btn:disabled{opacity:0.5; cursor:default;}
+
+  .comments-list{display:flex; flex-direction:column; gap:12px;}
+  .comment-item{
+    background:var(--card); border:1px solid var(--card-border);
+    border-radius:14px; padding:14px;
+  }
+  .comment-header{display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;}
+  .comment-header .name{font-weight:700; font-size:13px;}
+  .comment-header .date{font-size:11px; color:var(--muted);}
+  .comment-rating{color:#ffcf4d; font-size:12px; margin-bottom:8px;}
+  .comment-text{font-size:13px; line-height:1.5; color:var(--text);}
+  .no-comments{text-align:center; color:var(--muted); padding:30px 0; font-size:13px;}
 
   @media (max-width:480px){
     .pager{flex-wrap:wrap;}
@@ -252,7 +321,44 @@
   </div>
 </div>
 
+<!-- COMMENTS MODAL -->
+<div class="modal" id="commentsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Kommentlər</h2>
+      <div class="close-modal" onclick="closeComments()">✕</div>
+    </div>
+
+    <div class="add-comment-form">
+      <div class="form-group">
+        <label>Adın</label>
+        <input type="text" id="commentName" placeholder="Adınızı daxil edin">
+      </div>
+      <div class="form-group">
+        <label>Reytinq (1-5 ⭐)</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" onclick="selectRating(1)">★</span>
+          <span class="star" onclick="selectRating(2)">★</span>
+          <span class="star" onclick="selectRating(3)">★</span>
+          <span class="star" onclick="selectRating(4)">★</span>
+          <span class="star" onclick="selectRating(5)">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Şərh</label>
+        <textarea id="commentText" placeholder="Düşüncənizi paylaşın..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitComment()">Göndər</button>
+    </div>
+
+    <div id="commentsList" class="comments-list"></div>
+  </div>
+</div>
+
 <script>
+let currentRating = 0;
+let currentVenue = {cat:'', name:''};
+
 function mapsUrl(lat, lng, name){
   return `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${lat},${lng},18z`;
 }
@@ -385,10 +491,39 @@ const DATA = {
 
 let current = {restaurants:0, coffee:0, markets:0};
 
+function getStudentRating(venueName){
+  const comments = getComments(venueName);
+  if(comments.length === 0) return null;
+  const avg = comments.reduce((sum, c) => sum + c.rating, 0) / comments.length;
+  return avg.toFixed(1);
+}
+
+function getComments(venueName){
+  const all = JSON.parse(localStorage.getItem('venue-comments') || '{}');
+  return all[venueName] || [];
+}
+
+function saveComment(venueName, name, rating, text){
+  const all = JSON.parse(localStorage.getItem('venue-comments') || '{}');
+  if(!all[venueName]) all[venueName] = [];
+  all[venueName].push({
+    name: name || 'Anonim',
+    rating: rating,
+    text: text,
+    date: new Date().toLocaleDateString('az-AZ')
+  });
+  localStorage.setItem('venue-comments', JSON.stringify(all));
+}
+
 function buildVenueHTML(v, cat){
   const ratingRow = v.rating
-    ? `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value stars">${stars(v.rating)}</div></div>`
-    : `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value">məlumat yoxdur</div></div>`;
+    ? `<div class="info-row"><div class="label">⭐ Rəsmi Reytinq</div><div class="value stars">${stars(v.rating)}</div></div>`
+    : `<div class="info-row"><div class="label">⭐ Rəsmi Reytinq</div><div class="value">məlumat yoxdur</div></div>`;
+
+  const studentRating = getStudentRating(v.name);
+  const studentRatingRow = studentRating 
+    ? `<div class="info-row"><div class="label">🎓 UFAZ Reytinqi</div><div class="value stars" style="color:#00e5c3;">${stars(studentRating)}</div></div>`
+    : '';
 
   const mapsLink = mapsUrl(v.lat, v.lng, v.name);
   const woltLink = woltUrl(v.woltName || v.name);
@@ -425,11 +560,85 @@ function buildVenueHTML(v, cat){
       <div class="info-block">
         <div class="info-row"><div class="label">📍 UFAZ-a məsafə</div><div class="value">${v.distance}</div></div>
         ${ratingRow}
+        ${studentRatingRow}
         ${menuSection}
+        <button class="comment-btn" onclick="openComments('${v.name}', '${cat}')">
+          💬 Kommentləri Gör (${getComments(v.name).length})
+        </button>
         ${qrRow}
       </div>
     </div>
   `;
+}
+
+function openComments(venueName, cat){
+  currentVenue = {cat, name: venueName};
+  document.getElementById('modalTitle').textContent = venueName + ' - Kommentlər';
+  document.getElementById('commentsModal').classList.add('active');
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentText').value = '';
+  currentRating = 0;
+  updateStarRating();
+  loadComments(venueName);
+}
+
+function closeComments(){
+  document.getElementById('commentsModal').classList.remove('active');
+  currentVenue = {cat:'', name:''};
+}
+
+function selectRating(rating){
+  currentRating = rating;
+  updateStarRating();
+}
+
+function updateStarRating(){
+  document.querySelectorAll('#starRating .star').forEach((star, i) => {
+    star.classList.toggle('active', i < currentRating);
+  });
+}
+
+function submitComment(){
+  const name = document.getElementById('commentName').value.trim();
+  const text = document.getElementById('commentText').value.trim();
+  
+  if(!currentRating){
+    alert('Zəhmət olmasa reytinq seçin!');
+    return;
+  }
+  if(!text){
+    alert('Zəhmət olmasa şərh yazın!');
+    return;
+  }
+
+  saveComment(currentVenue.name, name, currentRating, text);
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentText').value = '';
+  currentRating = 0;
+  updateStarRating();
+  loadComments(currentVenue.name);
+  renderCategory(currentVenue.cat);
+}
+
+function loadComments(venueName){
+  const comments = getComments(venueName);
+  const list = document.getElementById('commentsList');
+  
+  if(comments.length === 0){
+    list.innerHTML = '<div class="no-comments">Hələ komment yoxdur. İlk kommentinizi yazın!</div>';
+    return;
+  }
+
+  list.innerHTML = comments.map(c => `
+    <div class="comment-item">
+      <div class="comment-header">
+        <span class="name">${c.name}</span>
+        <span class="date">${c.date}</span>
+      </div>
+      <div class="comment-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)} ${c.rating}/5</div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `).join('');
 }
 
 function renderCategory(cat){
