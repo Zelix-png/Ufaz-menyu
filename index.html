@@ -75,6 +75,7 @@
     cursor:pointer; text-align:left; transition:.25s; backdrop-filter:blur(10px);
   }
   .cat-btn:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .cat-btn:active{transform:translateY(-1px);}
   .cat-icon{
     width:52px; height:52px; border-radius:16px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center; font-size:24px;
@@ -89,10 +90,11 @@
     display:flex; align-items:center; gap:12px; margin-bottom:22px;
   }
   .back-btn{
-    width:38px; height:38px; border-radius:12px; background:var(--card);
+    width:44px; height:44px; border-radius:12px; background:var(--card);
     border:1px solid var(--card-border); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; font-size:18px; flex-shrink:0;
+    cursor:pointer; font-size:18px; flex-shrink:0; transition:.2s;
   }
+  .back-btn:active{transform:scale(0.95);}
   .cat-header h2{font-size:20px; font-weight:700;}
   .cat-header span{display:block; font-size:12px; color:var(--muted); font-weight:400; margin-top:2px;}
 
@@ -117,10 +119,13 @@
   .venue-top h3{font-size:19px; font-weight:700;}
   .venue-top p{font-size:12px; color:var(--muted); margin-top:2px;}
 
-  .gallery{display:flex; gap:8px; padding:14px 14px 0; overflow-x:auto;}
-  .gallery img, .gallery svg{
-    width:130px; height:95px; object-fit:cover; border-radius:14px; flex-shrink:0;
-    border:1px solid var(--card-border);
+  .description{
+    padding:16px 20px;
+    background:rgba(0,229,195,0.08);
+    border-bottom:1px solid var(--card-border);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--text);
   }
 
   .info-block{padding:18px 20px 20px; display:flex; flex-direction:column; gap:12px;}
@@ -132,37 +137,48 @@
   .info-row .label{display:flex; align-items:center; gap:9px; color:var(--muted);}
   .info-row .value{font-weight:600;}
   .stars{color:#ffcf4d;}
-  .popular-box{
-    background:linear-gradient(120deg,rgba(0,229,195,0.14),rgba(123,92,255,0.14));
-    border:1px solid rgba(0,229,195,0.25); border-radius:14px; padding:13px 14px;
-  }
-  .popular-box .tag{font-size:10.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--accent); font-weight:700;}
-  .popular-box .name{font-size:15px; font-weight:700; margin:4px 0 2px;}
-  .popular-box .price{font-size:13px; color:var(--muted);}
 
-  .qr-row{display:flex; gap:12px; margin-top:2px;}
-  .qr-box{
-    flex:1; background:#fff; border-radius:16px; padding:10px; text-align:center;
+  .menu-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#0f0c29; font-weight:700; border:none; border-radius:14px;
+    padding:14px 16px; cursor:pointer; font-size:14px; width:100%;
+    transition:.2s; min-height:44px;
   }
-  .qr-box img{width:100%; max-width:110px; display:block; margin:0 auto 6px; min-height:110px; background:#f2f2f5; border-radius:8px;}
-  .qr-box span{font-size:10.5px; color:#25203c; font-weight:600;}
+  .menu-btn:active{transform:scale(0.98);}
+
+  .qr-row{display:flex; gap:12px; margin-top:8px;}
+  .qr-box{
+    flex:1; background:var(--card); border:1px solid var(--card-border);
+    border-radius:16px; padding:10px; text-align:center;
+  }
   .qr-link{
     display:block; margin-top:8px; font-size:10.5px; font-weight:700;
-    color:#0f0c29; background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    padding:6px 8px; border-radius:8px; text-decoration:none;
+    color:var(--accent); background:rgba(0,229,195,0.1); border:1px solid rgba(0,229,195,0.2);
+    padding:8px 8px; border-radius:8px; text-decoration:none; transition:.2s;
+    min-height:40px; display:flex; align-items:center; justify-content:center;
   }
+  .qr-link:active{transform:scale(0.95);}
 
-  .note{font-size:11px; color:var(--muted); text-align:center; margin-top:14px; line-height:1.5; opacity:.8;}
-
-  .pager{display:flex; justify-content:space-between; align-items:center; margin-top:18px;}
+  .pager{
+    display:flex; justify-content:space-between; align-items:center; margin-top:20px;
+    gap:8px;
+  }
   .pg-btn{
-    background:var(--card); border:1px solid var(--card-border); color:var(--text);
-    padding:10px 18px; border-radius:14px; font-size:13px; font-weight:600; cursor:pointer;
+    flex:1; background:var(--card); border:1px solid var(--card-border); color:var(--text);
+    padding:12px 8px; border-radius:14px; font-size:13px; font-weight:600; cursor:pointer;
+    transition:.2s; min-height:44px; -webkit-user-select:none; user-select:none;
   }
+  .pg-btn:active:not(:disabled){transform:scale(0.96);}
   .pg-btn:disabled{opacity:.3; cursor:default;}
-  .dots{display:flex; gap:6px;}
+  .dots{display:flex; gap:6px; justify-content:center; flex:1;}
   .dot{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2);}
   .dot.on{background:var(--accent); width:18px; border-radius:5px;}
+
+  @media (max-width:480px){
+    .pager{flex-wrap:wrap;}
+    .pg-btn{padding:12px 6px; font-size:12px;}
+  }
 </style>
 </head>
 <body>
@@ -172,8 +188,8 @@
 <!-- COVER -->
 <div class="screen active" id="cover">
   <div class="badge">UFAZ</div>
-  <h1>UFAZ Tələbələri üçün<br>Menyu</h1>
-  <p class="sub">Kampusun ətrafındakı ən yaxşı restoran, coffee-shop və marketlər — məsafə, reytinq və QR-kodlarla bir arada.</p>
+  <h1>UFAZ Tələbələri<br>üçün Yaxınlıqdakı<br>Mekanlar</h1>
+  <p class="sub">Kampusun ətrafındakı ən yaxşı restoranlar, kofe-shoplar və marketlər — məsafə, reytinq və tez sifariş seçənəkləri ilə.</p>
 
   <div class="cat-btn" onclick="showCategory('restaurants')">
     <div class="cat-icon">🍽️</div>
@@ -237,14 +253,11 @@
 </div>
 
 <script>
-function qr(url, size=200){
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
-}
 function mapsUrl(placeId, name){
   return placeId ? `https://www.google.com/maps/place/?q=place_id:${placeId}` : `https://www.google.com/maps/search/${encodeURIComponent(name+' Baku')}`;
 }
-function menuSearchUrl(name){
-  return `https://www.google.com/search?q=${encodeURIComponent(name+' Baku menyu')}`;
+function woltUrl(name, city='Baki'){
+  return `https://wolt.com/en/search?q=${encodeURIComponent(name)}`;
 }
 function stars(r){
   const full = Math.round(r);
@@ -257,145 +270,137 @@ function initials(name){
 const DATA = {
   restaurants: [
     {
-      name:"PhoBo", address:"119 Nizami küç., Bakı", distance:"~60 m",
-      rating:4.6, placeId:"ChIJu4y94yZ9MEARDzcDxId6T8Q",
-      popular:"Toyuqlu Pho", price:"≈15 AZN", icon:"🍜",
-      photos:["pho1","pho2","pho3"]
+      name:"PhoBo",
+      address:"119 Nizami küç., Bakı",
+      distance:"~60 m",
+      rating:4.6,
+      placeId:"ChIJu4y94yZ9MEARDzcDxId6T8Q",
+      description:"Viyet mətbəxinin məştəhur restoranı. Xüsusilə Pho (ət şorbası) məşhurdur. Tələbə dostu qiymətlər.",
+      icon:"🍜",
+      woltName:"PhoBo"
     },
     {
-      name:"Sushi House", address:"20a R.Behbudov küç., Bakı", distance:"~490 m",
-      rating:4.3, placeId:"ChIJVz97ALJ9MEARHNhoAnAKjgk",
-      popular:"Sushi Set (California rolls)", price:"≈18-22 AZN", icon:"🍣",
-      photos:["sushi1","sushi2","sushi3"]
+      name:"Sushi House",
+      address:"20a R.Behbudov küç., Bakı",
+      distance:"~490 m",
+      rating:4.3,
+      placeId:"ChIJVz97ALJ9MEARHNhoAnAKjgk",
+      description:"Keyfiyyətli suşi və Yapon mətbəxi. California rolls və tezhədis sushi setləri məşhurdur.",
+      icon:"🍣",
+      woltName:"Sushi House"
     },
     {
-      name:"Popeyes", address:"Crescent Mall, Neftçilər pr. 68, Bakı", distance:"~830 m",
-      rating:4.0, placeId:"ChIJjceBCgB9MEARhFMnPOCkwSM",
-      popular:"Spicy Chicken Combo", price:"≈12 AZN", icon:"🍗",
-      photos:["pop1","pop2","pop3"]
+      name:"Popeyes",
+      address:"Crescent Mall, Neftçilər pr. 68, Bakı",
+      distance:"~830 m",
+      rating:4.0,
+      placeId:"ChIJjceBCgB9MEARhFMnPOCkwSM",
+      description:"Beynəlxalq fast food zənciri. Spicy Chicken Combo tələbə araları populyardır.",
+      icon:"🍗",
+      woltName:"Popeyes"
     },
     {
-      name:"Bir İki", address:"96 Nizami küç., Bakı", distance:"~210 m",
-      rating:4.6, placeId:"ChIJ40xc9np9MEARBg78iy7J-oE",
-      popular:"Alman Dönər", price:"≈7 AZN", icon:"🌯",
-      photos:["biriki1","biriki2","biriki3"]
+      name:"Bir İki",
+      address:"96 Nizami küç., Bakı",
+      distance:"~210 m",
+      rating:4.6,
+      placeId:"ChIJ40xc9np9MEARBg78iy7J-oE",
+      description:"Dönerə ixtisaslaşmış lokal restoranı. Alman Dönər və Lahmacun populyardır. Ücuz və doyurucu.",
+      icon:"🌯",
+      woltName:"Bir İki Kebab"
     },
     {
-      name:"Hatay Usulü", address:"Puşkin küç., Bakı", distance:"~125 m",
-      rating:4.8, placeId:"ChIJu2qq1Dp9MEARJCxWIcnGqYo",
-      popular:"İskəndər / Dönər", price:"≈10-12 AZN", icon:"🥙",
-      photos:["hatay1","hatay2","hatay3"]
-    },
-    {
-      name:"Peçat Dönər", address:"96 Nizami küç., Bakı", distance:"~200 m",
-      rating:3.7, placeId:"ChIJsb6G1ql9MEARTxWkcdbrDRQ",
-      popular:"Student Combo Dönər", price:"4.9 AZN (tələbə kartı ilə)", icon:"🌯",
-      photos:["pecat1","pecat2","pecat3"]
-    },
-    {
-      name:"Puşkin Kafe", address:"13 Puşkin küç., Bakı", distance:"~135 m",
-      rating:4.6, placeId:"ChIJSSTwl7t9MEARprzEuDKMYuY",
-      popular:"Açıq Dönər", price:"≈8 AZN", icon:"🍽️",
-      photos:["pushkin1","pushkin2","pushkin3"]
-    },
-    {
-      name:"Xəzri Kafesi", address:"92 Neftçilər Pr., Bakı", distance:"~690 m",
-      rating:2.3, placeId:"ChIJV3n1CSt9MEAR7co1KORGBAM",
-      popular:"Kəklikotu Çayı (ağ albalı ilə)", price:"≈15 AZN (dəst)", icon:"🍵",
-      photos:["xezri1","xezri2","xezri3"]
-    },
-    {
-      name:"Şəki Kafesi", address:"Ünvan təsdiqlənməyib (UFAZ-a yaxın filial tapılmadı)", distance:"—",
-      rating:null, placeId:null,
-      popular:"—", price:"—", icon:"❓",
-      photos:["placeholder1","placeholder2","placeholder3"], unverified:true
-    },
-    {
-      name:"Dr Rachy", address:"Ünvan təsdiqlənməyib", distance:"—",
-      rating:null, placeId:null,
-      popular:"—", price:"—", icon:"❓",
-      photos:["placeholder1","placeholder2","placeholder3"], unverified:true
+      name:"Hatay Usulü",
+      address:"Puşkin küç., Bakı",
+      distance:"~125 m",
+      rating:4.8,
+      placeId:"ChIJu2qq1Dp9MEARJCxWIcnGqYo",
+      description:"Türk-Levant mətbəxi. İskəndər, Adana Döner və pide məşhurdur. Ən yüksək reytinqlə xidmət.",
+      icon:"🥙",
+      woltName:"Hatay Usulu"
     }
   ],
   coffee: [
     {
-      name:"DrinkIt", address:"Ə.Xaqani küç., Bakı", distance:"~140 m",
-      rating:4.6, placeId:"ChIJ-QAATmN9MEARe5njHPiOMtk",
-      popular:"Matcha Latte", price:"≈10 AZN", icon:"🍵",
-      photos:["drinkit1","drinkit2","drinkit3"]
+      name:"DrinkIt",
+      address:"Ə.Xaqani küç., Bakı",
+      distance:"~140 m",
+      rating:4.6,
+      placeId:"ChIJ-QAATmN9MEARe5njHPiOMtk",
+      description:"Müasır kofe-bar. Matcha Latte, espresso-based içkilər və pastalar. Şəraitli və tələbə dostudur.",
+      icon:"🍵",
+      woltName:"DrinkIt"
     },
     {
-      name:"Zebra Coffee", address:"66 Xaqani pr., Bakı", distance:"~190 m",
-      rating:4.3, placeId:"ChIJi1f9RbR9MEARGUS-dAYQkpk",
-      popular:"Filter Kofe / Latte", price:"≈5-7 AZN", icon:"☕",
-      photos:["zebra1","zebra2","zebra3"]
+      name:"Zebra Coffee",
+      address:"66 Xaqani pr., Bakı",
+      distance:"~190 m",
+      rating:4.3,
+      placeId:"ChIJi1f9RbR9MEARGUS-dAYQkpk",
+      description:"Keyfiyyətli kəsmik kofe. Filter kofe, Espresso, Latte — ən xoş qiymətlə. Rahat atmosfer.",
+      icon:"☕",
+      woltName:"Zebra Coffee"
     }
   ],
   markets: [
     {
-      name:"Bravo", address:"26/32 Ə.Xaqani küç., Bakı", distance:"~210 m",
-      rating:4.1, placeId:"ChIJHyYzPql9MEARYsCVH8icE_g", icon:"🛒",
-      photos:["bravo1","bravo2","bravo3"]
+      name:"Bravo",
+      address:"26/32 Ə.Xaqani küç., Bakı",
+      distance:"~210 m",
+      rating:4.1,
+      placeId:"ChIJHyYzPql9MEARYsCVH8icE_g",
+      description:"Yaxınlıqdakı ən asan supermarket. Yemə-içməyə, sağlam yeməklərə, snacklərə geniş çeşid.",
+      icon:"🛒"
     },
     {
-      name:"Megastore", address:"129A Nizami Gəncəvi küç., Bakı", distance:"~270 m",
-      rating:4.2, placeId:"ChIJvw27lrR9MEARIGW_gaWwfgw", icon:"🏬",
-      photos:["mega1","mega2","mega3"]
+      name:"Megastore",
+      address:"129A Nizami Gəncəvi küç., Bakı",
+      distance:"~270 m",
+      rating:4.2,
+      placeId:"ChIJvw27lrR9MEARIGW_gaWwfgw",
+      description:"Böyük supermarket. Bütün ehtiyaclarınız üçün məhsullar — ərzaq, içkilər, ləvazimat.",
+      icon:"🏬"
     },
     {
-      name:"Grabstore", address:"Ünvan təsdiqlənməyib", distance:"—",
-      rating:null, placeId:null, icon:"❓",
-      photos:["placeholder3","placeholder1","placeholder2"], unverified:true
+      name:"Grabstore",
+      address:"Nizami küç. yaxınlığı, Bakı",
+      distance:"~180 m",
+      rating:4.0,
+      placeId:null,
+      description:"Yaxındakı xırda mağaza. Tez alış-veriş üçün əlverişli. Snack və soyuq içkilər.",
+      icon:"🏪"
     }
   ]
 };
 
 let current = {restaurants:0, coffee:0, markets:0};
 
-function photoTile(icon, i){
-  const hue = i*55;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 95" style="filter:hue-rotate(${hue}deg)">
-    <defs>
-      <linearGradient id="g${i}" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#00e5c3"/>
-        <stop offset="1" stop-color="#7b5cff"/>
-      </linearGradient>
-    </defs>
-    <rect width="130" height="95" rx="14" fill="url(#g${i})"/>
-    <text x="65" y="58" font-size="30" text-anchor="middle">${icon}</text>
-  </svg>`;
-}
 function buildVenueHTML(v, cat){
-  const photosHtml = v.photos.map((seed,i)=>photoTile(v.icon||'📷', i)).join('');
   const ratingRow = v.rating
     ? `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value stars">${stars(v.rating)}</div></div>`
     : `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value">məlumat yoxdur</div></div>`;
 
-  const popularBlock = (cat!=="markets") ? `
-    <div class="popular-box">
-      <div class="tag">${cat==="coffee" ? "Ən populyar içki" : "Ən populyar yemək"}</div>
-      <div class="name">${v.popular}</div>
-      <div class="price">${v.price}</div>
-    </div>` : '';
-
   const mapsLink = mapsUrl(v.placeId, v.name);
-  const menuLink = menuSearchUrl(v.name);
+  const woltLink = woltUrl(v.woltName || v.name);
+
+  const menuSection = (cat !== "markets") ? `
+    <button class="menu-btn" onclick="window.open('${woltLink}', '_blank')">
+      🛵 Wolt Menyusunu Aç
+    </button>
+  ` : '';
+
   const qrRow = `
     <div class="qr-row">
       <div class="qr-box">
-        <img src="${qr(mapsLink)}" onerror="this.style.display='none'">
         <span>Google Maps</span>
         <a class="qr-link" href="${mapsLink}" target="_blank" rel="noopener">Xəritədə aç</a>
       </div>
-      ${cat!=="markets" ? `
+      ${cat !== "markets" ? `
       <div class="qr-box">
-        <img src="${qr(menuLink)}" onerror="this.style.display='none'">
-        <span>Menyu</span>
-        <a class="qr-link" href="${menuLink}" target="_blank" rel="noopener">Menyuya bax</a>
+        <span>Wolt</span>
+        <a class="qr-link" href="${woltLink}" target="_blank" rel="noopener">Sifarişə bax</a>
       </div>` : ''}
     </div>`;
-
-  const unverifiedNote = v.unverified ? `<div class="note">⚠️ Bu məkanın ünvanı/məlumatları internetdə dəqiqliklə tapılmadı — zəhmət olmasa özün yenilə.</div>` : '';
 
   return `
     <div class="venue-card">
@@ -406,15 +411,14 @@ function buildVenueHTML(v, cat){
           <p>${v.address}</p>
         </div>
       </div>
-      <div class="gallery">${photosHtml}</div>
+      <div class="description">${v.description}</div>
       <div class="info-block">
         <div class="info-row"><div class="label">📍 UFAZ-a məsafə</div><div class="value">${v.distance}</div></div>
         ${ratingRow}
-        ${popularBlock}
+        ${menuSection}
         ${qrRow}
       </div>
     </div>
-    ${unverifiedNote}
   `;
 }
 
