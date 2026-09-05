@@ -519,8 +519,11 @@ function getStudentRating(venueName){
   const key = getVenueKey(venueName);
   db.ref('comments/' + key).once('value', snap => {
     const comments = snap.val();
-    if(!comments) return null;
+    if(!comments) {
+      return;
+    }
     const commentsList = Object.values(comments);
+    if(commentsList.length === 0) return;
     const avg = commentsList.reduce((sum, c) => sum + c.rating, 0) / commentsList.length;
     document.querySelectorAll(`[data-venue="${key}"]`).forEach(el => {
       el.innerHTML = stars(avg.toFixed(1));
