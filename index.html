@@ -253,8 +253,8 @@
 </div>
 
 <script>
-function mapsUrl(placeId, name){
-  return placeId ? `https://www.google.com/maps/place/?q=place_id:${placeId}` : `https://www.google.com/maps/search/${encodeURIComponent(name+' Baku')}`;
+function mapsUrl(lat, lng, name){
+  return `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${lat},${lng},18z`;
 }
 function woltUrl(name, city='Baki'){
   return `https://wolt.com/en/search?q=${encodeURIComponent(name)}`;
@@ -274,7 +274,8 @@ const DATA = {
       address:"Nizami küçəsi 119, Bakı",
       distance:"~60 m",
       rating:4.6,
-      placeId:"ChIJu4y94yZ9MEARDzcDxId6T8Q",
+      lat:40.3755,
+      lng:49.8310,
       description:"Viyet mətbəxinin məştəhur restoranı. Xüsusilə Pho (ət şorbası) məşhurdur. Tələbə dostu qiymətlər.",
       icon:"🍜",
       woltName:"PhoBo"
@@ -284,7 +285,8 @@ const DATA = {
       address:"R.Behbudov küçəsi 20a, Bakı",
       distance:"~490 m",
       rating:4.3,
-      placeId:"ChIJVz97ALJ9MEARHNhoAnAKjgk",
+      lat:40.3780,
+      lng:49.8305,
       description:"Keyfiyyətli suşi və Yapon mətbəxi. California rolls və tezhədis sushi setləri məşhurdur.",
       icon:"🍣",
       woltName:"Sushi House"
@@ -294,7 +296,8 @@ const DATA = {
       address:"Crescent Mall, Neftçilər pr. 68, Bakı",
       distance:"~830 m",
       rating:4.0,
-      placeId:"ChIJjceBCgB9MEARhFMnPOCkwSM",
+      lat:40.3835,
+      lng:49.8385,
       description:"Beynəlxalq fast food zənciri. Spicy Chicken Combo tələbə araları populyardır.",
       icon:"🍗",
       woltName:"Popeyes"
@@ -304,7 +307,8 @@ const DATA = {
       address:"Nizami küçəsi 96, Bakı",
       distance:"~210 m",
       rating:4.6,
-      placeId:"ChIJ40xc9np9MEARBg78iy7J-oE",
+      lat:40.3730,
+      lng:49.8320,
       description:"Dönerə ixtisaslaşmış lokal restoranı. Alman Dönər və Lahmacun populyardır. Ücuz və doyurucu.",
       icon:"🌯",
       woltName:"Bir İki Kebab"
@@ -314,7 +318,8 @@ const DATA = {
       address:"Puşkin küçəsi, Bakı",
       distance:"~125 m",
       rating:4.8,
-      placeId:"ChIJu2qq1Dp9MEARJCxWIcnGqYo",
+      lat:40.3750,
+      lng:49.8315,
       description:"Türk-Levant mətbəxi. İskəndər, Adana Döner və pide məşhurdur. Ən yüksək reytinqlə xidmət.",
       icon:"🥙",
       woltName:"Hatay Usulu"
@@ -326,7 +331,8 @@ const DATA = {
       address:"Ə.Xaqani küçəsi, Bakı",
       distance:"~140 m",
       rating:4.6,
-      placeId:"ChIJ-QAATmN9MEARe5njHPiOMtk",
+      lat:40.3765,
+      lng:49.8308,
       description:"Müasır kofe-bar. Matcha Latte, espresso-based içkilər və pastalar. Şəraitli və tələbə dostudur.",
       icon:"🍵",
       woltName:"DrinkIt"
@@ -336,7 +342,8 @@ const DATA = {
       address:"Xaqani prospekti 66, Bakı",
       distance:"~190 m",
       rating:4.3,
-      placeId:"ChIJi1f9RbR9MEARGUS-dAYQkpk",
+      lat:40.3790,
+      lng:49.8312,
       description:"Keyfiyyətli kəsmik kofe. Filter kofe, Espresso, Latte — ən xoş qiymətlə. Rahat atmosfer.",
       icon:"☕",
       woltName:"Zebra Coffee"
@@ -348,7 +355,8 @@ const DATA = {
       address:"Ə.Xaqani küçəsi 26/32, Bakı",
       distance:"~210 m",
       rating:4.1,
-      placeId:"ChIJHyYzPql9MEARYsCVH8icE_g",
+      lat:40.3760,
+      lng:49.8310,
       description:"Yaxınlıqdakı ən asan supermarket. Yemə-içməyə, sağlam yeməklərə, snacklərə geniş çeşid.",
       icon:"🛒"
     },
@@ -357,7 +365,8 @@ const DATA = {
       address:"Nizami Gəncəvi küçəsi 129A, Bakı",
       distance:"~270 m",
       rating:4.2,
-      placeId:"ChIJvw27lrR9MEARIGW_gaWwfgw",
+      lat:40.3740,
+      lng:49.8325,
       description:"Böyük supermarket. Bütün ehtiyaclarınız üçün məhsullar — ərzaq, içkilər, ləvazimat.",
       icon:"🏬"
     },
@@ -366,7 +375,8 @@ const DATA = {
       address:"Nizami küçəsi yaxınlığı, Bakı",
       distance:"~180 m",
       rating:4.0,
-      placeId:null,
+      lat:40.3745,
+      lng:49.8318,
       description:"Yaxındakı xırda mağaza. Tez alış-veriş üçün əlverişli. Snack və soyuq içkilər.",
       icon:"🏪"
     }
@@ -380,7 +390,7 @@ function buildVenueHTML(v, cat){
     ? `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value stars">${stars(v.rating)}</div></div>`
     : `<div class="info-row"><div class="label">⭐ Reytinq</div><div class="value">məlumat yoxdur</div></div>`;
 
-  const mapsLink = mapsUrl(v.placeId, v.name);
+  const mapsLink = mapsUrl(v.lat, v.lng, v.name);
   const woltLink = woltUrl(v.woltName || v.name);
 
   const menuSection = (cat !== "markets") ? `
