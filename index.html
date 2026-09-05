@@ -117,7 +117,7 @@
     box-shadow:0 0 0 3px rgba(255,255,255,0.08);
   }
   .venue-top h3{font-size:19px; font-weight:700;}
-  .venue-top p{font-size:12px; color:var(--muted); margin-top:2px;}
+  .venue-top p{font-size:12px; color:var(--muted); margin-top:2px; word-break:break-word;}
 
   .description{
     padding:16px 20px;
@@ -135,7 +135,7 @@
     font-size:13.5px;
   }
   .info-row .label{display:flex; align-items:center; gap:9px; color:var(--muted);}
-  .info-row .value{font-weight:600;}
+  .info-row .value{font-weight:600; word-break:break-word; text-align:right;}
   .stars{color:#ffcf4d;}
 
   .menu-btn{
@@ -271,7 +271,7 @@ const DATA = {
   restaurants: [
     {
       name:"PhoBo",
-      address:"119 Nizami küç., Bakı",
+      address:"Nizami küçəsi 119, Bakı",
       distance:"~60 m",
       rating:4.6,
       placeId:"ChIJu4y94yZ9MEARDzcDxId6T8Q",
@@ -281,7 +281,7 @@ const DATA = {
     },
     {
       name:"Sushi House",
-      address:"20a R.Behbudov küç., Bakı",
+      address:"R.Behbudov küçəsi 20a, Bakı",
       distance:"~490 m",
       rating:4.3,
       placeId:"ChIJVz97ALJ9MEARHNhoAnAKjgk",
@@ -301,7 +301,7 @@ const DATA = {
     },
     {
       name:"Bir İki",
-      address:"96 Nizami küç., Bakı",
+      address:"Nizami küçəsi 96, Bakı",
       distance:"~210 m",
       rating:4.6,
       placeId:"ChIJ40xc9np9MEARBg78iy7J-oE",
@@ -311,7 +311,7 @@ const DATA = {
     },
     {
       name:"Hatay Usulü",
-      address:"Puşkin küç., Bakı",
+      address:"Puşkin küçəsi, Bakı",
       distance:"~125 m",
       rating:4.8,
       placeId:"ChIJu2qq1Dp9MEARJCxWIcnGqYo",
@@ -323,7 +323,7 @@ const DATA = {
   coffee: [
     {
       name:"DrinkIt",
-      address:"Ə.Xaqani küç., Bakı",
+      address:"Ə.Xaqani küçəsi, Bakı",
       distance:"~140 m",
       rating:4.6,
       placeId:"ChIJ-QAATmN9MEARe5njHPiOMtk",
@@ -333,7 +333,7 @@ const DATA = {
     },
     {
       name:"Zebra Coffee",
-      address:"66 Xaqani pr., Bakı",
+      address:"Xaqani prospekti 66, Bakı",
       distance:"~190 m",
       rating:4.3,
       placeId:"ChIJi1f9RbR9MEARGUS-dAYQkpk",
@@ -345,7 +345,7 @@ const DATA = {
   markets: [
     {
       name:"Bravo",
-      address:"26/32 Ə.Xaqani küç., Bakı",
+      address:"Ə.Xaqani küçəsi 26/32, Bakı",
       distance:"~210 m",
       rating:4.1,
       placeId:"ChIJHyYzPql9MEARYsCVH8icE_g",
@@ -354,7 +354,7 @@ const DATA = {
     },
     {
       name:"Megastore",
-      address:"129A Nizami Gəncəvi küç., Bakı",
+      address:"Nizami Gəncəvi küçəsi 129A, Bakı",
       distance:"~270 m",
       rating:4.2,
       placeId:"ChIJvw27lrR9MEARIGW_gaWwfgw",
@@ -363,7 +363,7 @@ const DATA = {
     },
     {
       name:"Grabstore",
-      address:"Nizami küç. yaxınlığı, Bakı",
+      address:"Nizami küçəsi yaxınlığı, Bakı",
       distance:"~180 m",
       rating:4.0,
       placeId:null,
