@@ -6,6 +6,8 @@
 <title>UFAZ Tələbələri üçün Menyu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
 <style>
   :root{
     --bg-1:#0f0c29;
@@ -243,6 +245,8 @@
   .comment-rating{color:#ffcf4d; font-size:12px; margin-bottom:8px;}
   .comment-text{font-size:13px; line-height:1.5; color:var(--text);}
   .no-comments{text-align:center; color:var(--muted); padding:30px 0; font-size:13px;}
+  
+  .loading{text-align:center; color:var(--muted); padding:20px 0; font-size:12px;}
 
   @media (max-width:480px){
     .pager{flex-wrap:wrap;}
@@ -356,6 +360,21 @@
 </div>
 
 <script>
+// Firebase Konfigurasyonu
+const firebaseConfig = {
+  apiKey: "AIzaSyDWwx6YxXz-xJz7vW8xZ9Y0aB1cC2dD3eE",
+  authDomain: "ufaz-menyu.firebaseapp.com",
+  databaseURL: "https://ufaz-menyu-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ufaz-menyu",
+  storageBucket: "ufaz-menyu.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abcdef1234567890"
+};
+
+// Firebase Başlat
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let currentRating = 0;
 let currentVenue = {cat:'', name:''};
 
@@ -491,28 +510,42 @@ const DATA = {
 
 let current = {restaurants:0, coffee:0, markets:0};
 
-function getStudentRating(venueName){
-  const comments = getComments(venueName);
-  if(comments.length === 0) return null;
-  const avg = comments.reduce((sum, c) => sum + c.rating, 0) / comments.length;
-  return avg.toFixed(1);
+// Mekan adını Firebase-ə uyğun format
+function getVenueKey(name){
+  return name.toLowerCase().replace(/\s+/g, '_').replace(/ə/g, 'e').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ş/g, 's').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c');
 }
 
-function getComments(venueName){
-  const all = JSON.parse(localStorage.getItem('venue-comments') || '{}');
-  return all[venueName] || [];
+function getStudentRating(venueName){
+  const key = getVenueKey(venueName);
+  db.ref('comments/' + key).once('value', snap => {
+    const comments = snap.val();
+    if(!comments) return null;
+    const commentsList = Object.values(comments);
+    const avg = commentsList.reduce((sum, c) => sum + c.rating, 0) / commentsList.length;
+    document.querySelectorAll(`[data-venue="${key}"]`).forEach(el => {
+      el.innerHTML = stars(avg.toFixed(1));
+    });
+  });
+}
+
+function getComments(venueName, callback){
+  const key = getVenueKey(venueName);
+  db.ref('comments/' + key).once('value', snap => {
+    const comments = snap.val();
+    callback(comments ? Object.values(comments) : []);
+  });
 }
 
 function saveComment(venueName, name, rating, text){
-  const all = JSON.parse(localStorage.getItem('venue-comments') || '{}');
-  if(!all[venueName]) all[venueName] = [];
-  all[venueName].push({
+  const key = getVenueKey(venueName);
+  const newCommentRef = db.ref('comments/' + key).push();
+  newCommentRef.set({
     name: name || 'Anonim',
     rating: rating,
     text: text,
-    date: new Date().toLocaleDateString('az-AZ')
+    date: new Date().toLocaleDateString('az-AZ'),
+    timestamp: new Date().getTime()
   });
-  localStorage.setItem('venue-comments', JSON.stringify(all));
 }
 
 function buildVenueHTML(v, cat){
@@ -520,10 +553,8 @@ function buildVenueHTML(v, cat){
     ? `<div class="info-row"><div class="label">⭐ Rəsmi Reytinq</div><div class="value stars">${stars(v.rating)}</div></div>`
     : `<div class="info-row"><div class="label">⭐ Rəsmi Reytinq</div><div class="value">məlumat yoxdur</div></div>`;
 
-  const studentRating = getStudentRating(v.name);
-  const studentRatingRow = studentRating 
-    ? `<div class="info-row"><div class="label">🎓 UFAZ Reytinqi</div><div class="value stars" style="color:#00e5c3;">${stars(studentRating)}</div></div>`
-    : '';
+  const venueKey = getVenueKey(v.name);
+  const studentRatingRow = `<div class="info-row"><div class="label">🎓 UFAZ Reytinqi</div><div class="value stars" style="color:#00e5c3;" data-venue="${venueKey}">Yüklənir...</div></div>`;
 
   const mapsLink = mapsUrl(v.lat, v.lng, v.name);
   const woltLink = woltUrl(v.woltName || v.name);
@@ -563,7 +594,7 @@ function buildVenueHTML(v, cat){
         ${studentRatingRow}
         ${menuSection}
         <button class="comment-btn" onclick="openComments('${v.name}', '${cat}')">
-          💬 Kommentləri Gör (${getComments(v.name).length})
+          💬 Kommentləri Gör
         </button>
         ${qrRow}
       </div>
@@ -616,29 +647,34 @@ function submitComment(){
   document.getElementById('commentText').value = '';
   currentRating = 0;
   updateStarRating();
-  loadComments(currentVenue.name);
-  renderCategory(currentVenue.cat);
+  setTimeout(() => {
+    loadComments(currentVenue.name);
+    renderCategory(currentVenue.cat);
+  }, 500);
 }
 
 function loadComments(venueName){
-  const comments = getComments(venueName);
   const list = document.getElementById('commentsList');
+  list.innerHTML = '<div class="loading">Kommentlər yüklənir...</div>';
   
-  if(comments.length === 0){
-    list.innerHTML = '<div class="no-comments">Hələ komment yoxdur. İlk kommentinizi yazın!</div>';
-    return;
-  }
+  getComments(venueName, (comments) => {
+    if(comments.length === 0){
+      list.innerHTML = '<div class="no-comments">Hələ komment yoxdur. İlk kommentinizi yazın!</div>';
+      return;
+    }
 
-  list.innerHTML = comments.map(c => `
-    <div class="comment-item">
-      <div class="comment-header">
-        <span class="name">${c.name}</span>
-        <span class="date">${c.date}</span>
+    const sorted = comments.sort((a, b) => b.timestamp - a.timestamp);
+    list.innerHTML = sorted.map(c => `
+      <div class="comment-item">
+        <div class="comment-header">
+          <span class="name">${c.name}</span>
+          <span class="date">${c.date}</span>
+        </div>
+        <div class="comment-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)} ${c.rating}/5</div>
+        <div class="comment-text">${c.text}</div>
       </div>
-      <div class="comment-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)} ${c.rating}/5</div>
-      <div class="comment-text">${c.text}</div>
-    </div>
-  `).join('');
+    `).join('');
+  });
 }
 
 function renderCategory(cat){
@@ -648,6 +684,11 @@ function renderCategory(cat){
   dots.innerHTML = DATA[cat].map((_,i)=>`<div class="dot ${i===0?'on':''}" id="dot-${cat}-${i}"></div>`).join('');
   current[cat]=0;
   updatePagerButtons(cat);
+  
+  // Reytinqləri yükləmə
+  DATA[cat].forEach(v => {
+    getStudentRating(v.name);
+  });
 }
 
 function showPage(cat, idx){
