@@ -17,6 +17,7 @@
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   .cover-screen{text-align:center;padding-top:90px;}
   .badge{display:inline-block;padding:6px 16px;border-radius:30px;background:linear-gradient(90deg,var(--accent),var(--accent-2));font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#0f0c29;margin-bottom:22px;}
+  .badge-logo{height:78px;display:block;margin:0 auto 22px;}
   .cover-screen h1{font-size:30px;font-weight:800;line-height:1.25;background:linear-gradient(90deg,#fff,#c9c3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;}
   .cover-screen p.sub{color:var(--muted);font-size:14px;margin-bottom:40px;line-height:1.6;}
   .cat-btn{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;cursor:pointer;text-align:left;transition:.2s;-webkit-tap-highlight-color:transparent;}
@@ -94,7 +95,7 @@
 <div class="made-by">✦ Made by Eljan Ibrahimli</div>
 
 <div class="screen active cover-screen" id="cover">
-  <div class="badge">UFAZ</div>
+  <img src="ufaz-logo.png" alt="UFAZ" class="badge-logo">
   <h1>Assistance for<br>UFAZ Students</h1>
   <p class="sub">Everything you need around campus — nearby places, your class info, and quick how-to guides.</p>
   <div class="cat-btn" onclick="showScreen('near-cover')"><div class="cat-icon">📍</div><div class="txt"><h3>Near Locations</h3><p>Restaurants, coffee shops & markets</p></div><div class="arrow">→</div></div>
